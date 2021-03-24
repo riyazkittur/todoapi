@@ -20,15 +20,15 @@ namespace ToDoItemsAPI.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems()
         {
             return await _context.TodoItems
-                .Select(x=>ItemToDTO(x)).ToListAsync();
+                .Select(x=>ItemToDto(x)).ToListAsync();
         }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
+        public async Task<ActionResult<TodoItemDto>> GetTodoItem(long id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
@@ -37,16 +37,16 @@ namespace ToDoItemsAPI.Controllers
                 return NotFound();
             }
 
-            return ItemToDTO(todoItem);
+            return ItemToDto(todoItem);
         }
 
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItemDTO todoItemDTO)
+        public async Task<IActionResult> PutTodoItem(long id, TodoItemDto todoItemDto)
         {
-            if (id != todoItemDTO.Id)
+            if (id != todoItemDto.Id)
             {
                 return BadRequest();
             }
@@ -56,8 +56,8 @@ namespace ToDoItemsAPI.Controllers
             {
                 return NotFound();
             }
-            todoItem.Name = todoItemDTO.Name;
-            todoItem.IsComplete = todoItemDTO.IsComplete;
+            todoItem.Name = todoItemDto.Name;
+            todoItem.IsComplete = todoItemDto.IsComplete;
             _context.Entry(todoItem).State = EntityState.Modified;
 
             try
@@ -83,17 +83,17 @@ namespace ToDoItemsAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItemDTO todoItemDTO)
+        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItemDto todoItemDto)
         {
             var todoItem = new TodoItem()
             {
-                Name = todoItemDTO.Name,
-                IsComplete = todoItemDTO.IsComplete
+                Name = todoItemDto.Name,
+                IsComplete = todoItemDto.IsComplete
             };
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDTO.Id }, ItemToDTO(todoItem));
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDto.Id }, ItemToDto(todoItem));
         }
 
         // DELETE: api/TodoItems/5
@@ -116,8 +116,8 @@ namespace ToDoItemsAPI.Controllers
         {
             return _context.TodoItems.Any(e => e.Id == id);
         }
-        private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
-      new TodoItemDTO
+        private static TodoItemDto ItemToDto(TodoItem todoItem) =>
+      new TodoItemDto
       {
           Id = todoItem.Id,
           Name = todoItem.Name,
